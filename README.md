@@ -1,2 +1,3 @@
 # explorer.aegisum.com
-The public explorer of Aegisum.
+
+This is a template to setup your own blockchain explorer for Aegisum.
