@@ -3,7 +3,7 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { BarChart2, Clock, Layers, List, Menu, Pickaxe, Globe, Search } from "lucide-react"
+import { BarChart2, Clock, Layers, List, Menu, Pickaxe, Globe } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet"
 import { ThemeToggle } from "@/components/theme-toggle"
@@ -78,10 +78,6 @@ export function MainNav() {
           </div>
         </div>
         <div className="flex md:hidden flex-1 items-center justify-end space-x-2">
-          <Button variant="ghost" size="icon" onClick={() => document.getElementById("mobile-search")?.focus()}>
-            <Search className="h-5 w-5" />
-            <span className="sr-only">Search</span>
-          </Button>
           <ThemeToggle />
           <Sheet open={open} onOpenChange={setOpen}>
             <SheetTrigger asChild>
@@ -98,7 +94,6 @@ export function MainNav() {
                   <span className="text-muted-foreground ml-2">Explorer</span>
                 </Link>
               </div>
-              {/* Removed search bar from mobile menu as requested */}
               <nav className="flex flex-col gap-4 text-lg font-medium mt-6 px-7">
                 {routes.map((route) => (
                   <Link
@@ -118,7 +113,7 @@ export function MainNav() {
           </Sheet>
         </div>
       </div>
-      {/* Mobile search bar that appears below header - keeping this as requested */}
+      {/* Mobile search bar that appears below header */}
       <div className="md:hidden border-b">
         <div className="container mx-auto px-4 py-2">
           <SearchBar id="mobile-search" className="w-full" />
