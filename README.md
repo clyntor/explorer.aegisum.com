@@ -179,7 +179,7 @@ sudo apt install certbot python3-certbot-nginx
 ```
 
 ### 2. Ensure your domain points to your server DNS with A record.
-- See `https://www.123-reg.co.uk/support/domains/how-do-i-point-my-domain-name-to-an-ip-address/` if you need more information on how to do this.
+- See [here](https://www.123-reg.co.uk/support/domains/how-do-i-point-my-domain-name-to-an-ip-address/) if you need more information on how to do this.
 
 ### 3. Request SSL certs
 ```bash
