@@ -10,13 +10,13 @@ export function Footer() {
         </p>
         <div className="flex items-center gap-4">
           <Link
-            href="https://github.com/aegisum/"
+            href="https://github.com/clyntor/explorer.aegisum.com"
             target="_blank"
             rel="noreferrer"
-            className="text-sm font-medium underline underline-offset-4"
+            className="text-sm font-medium flex items-center gap-1.5 hover:text-primary transition-colors"
           >
             <Github className="h-4 w-4" />
-            <span className="sr-only">GitHub</span>
+            <span>Open Source Code</span>
           </Link>
           <Link
             href="https://aegisum.com"
