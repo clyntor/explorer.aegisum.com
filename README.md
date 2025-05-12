@@ -166,7 +166,7 @@ sudo ln -s /etc/nginx/sites-available/aegisum-explorer /etc/nginx/sites-enabled/
 sudo nginx -t
 ```
 
--If all is okay, restart Nginx:
+- If all is okay, restart Nginx:
 ```bash
 sudo systemctl restart nginx
 ```
