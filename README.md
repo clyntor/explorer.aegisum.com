@@ -100,7 +100,7 @@ npm install -g pm2
 ```bash
 pm2 start scripts/sync-blockchain.js --name aegisum-sync
 ```
-- Check logs / monitor iniitial sync:
+- Check logs / monitor initial sync:
 ```bash
 pm2 logs aegisum-sync
 ```
