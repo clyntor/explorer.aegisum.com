@@ -921,3 +921,28 @@ export async function getDifficultyHistory(limit = 50) {
     return []
   }
 }
+
+// Add this new function to fetch peer information
+export async function getPeerInfo() {
+  try {
+    // First try to get from database if available
+    const { db } = await connectToDatabase()
+    const peerInfo = await db.collection("peerinfo").find({}).sort({ lastsend: -1 }).toArray()
+
+    if (peerInfo && peerInfo.length > 0) {
+      return peerInfo
+    }
+
+    // If not in database, try direct RPC call
+    try {
+      const peers = await rpcCall("getpeerinfo")
+      return peers
+    } catch (error) {
+      console.error("Error fetching peer info from RPC:", error)
+      return []
+    }
+  } catch (error) {
+    console.error("Error fetching peer info:", error)
+    return []
+  }
+}
