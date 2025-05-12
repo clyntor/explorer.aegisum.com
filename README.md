@@ -197,8 +197,8 @@ pm2 restart all
 
 ## 📄 License
 
-This project is under the MIT License. See the LICENSE file for details.
+This project is under the MIT License. See the [LICENSE](https://github.com/clyntor/explorer.aegisum.com/blob/main/LICENSE) file for details.
 
 ## Support
 
-For support inquiries open an issue on GitHub or contact the Aegisum team.
+For support inquiries open an issue on GitHub or contact the Aegisum team through [mail](mailto:clynt@aegisum.com) or [discord](discord.gg/aegs).
