@@ -583,6 +583,33 @@ async function initializeDatabase() {
   }
 }
 
+// Sync peer information
+async function syncPeerInfo() {
+  try {
+    console.log("Syncing peer information...")
+
+    // Get peer info from RPC
+    const peerInfo = await rpcCall("getpeerinfo")
+
+    if (!peerInfo || !Array.isArray(peerInfo)) {
+      console.error("Invalid peer info response")
+      return
+    }
+
+    // Clear existing peer info
+    await db.collection("peerinfo").deleteMany({})
+
+    // Insert new peer info
+    if (peerInfo.length > 0) {
+      await db.collection("peerinfo").insertMany(peerInfo)
+    }
+
+    console.log(`Peer info sync completed. ${peerInfo.length} peers found.`)
+  } catch (error) {
+    console.error("Error syncing peer info:", error.message)
+  }
+}
+
 // Main sync function
 async function syncBlockchain() {
   try {
@@ -624,13 +651,15 @@ async function main() {
     // Initial sync
     await syncBlockchain()
     await syncMempool()
+    await syncPeerInfo() // Add this line
 
     // Set up periodic sync
     setInterval(syncBlockchain, SYNC_INTERVAL)
     setInterval(syncMempool, MEMPOOL_SYNC_INTERVAL)
+    setInterval(syncPeerInfo, 30 * 60 * 1000) // Sync every 30 minutes
 
     console.log(
-      `Sync service started, blockchain sync every ${SYNC_INTERVAL / 1000} seconds, mempool sync every ${MEMPOOL_SYNC_INTERVAL / 1000} seconds`,
+      `Sync service started, blockchain sync every ${SYNC_INTERVAL / 1000} seconds, mempool sync every ${MEMPOOL_SYNC_INTERVAL / 1000} seconds, peer info sync every 30 minutes`,
     )
   } catch (error) {
     console.error("Fatal error:", error)
