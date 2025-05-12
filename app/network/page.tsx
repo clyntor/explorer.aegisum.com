@@ -5,7 +5,7 @@ import Link from "next/link"
 import { getNetworkStats, getPeerInfo } from "@/lib/data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { ArrowUpRight, Globe, Server, Zap, Network, Clock, Pickaxe } from "lucide-react"
+import { ArrowUpRight, Globe, Server, Zap, Network, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 
@@ -63,7 +63,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node.aegisum.com
+                    addnode=node.aegisum.com:39940
                   </div>
                 </div>
               </CardContent>
@@ -87,7 +87,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node1.aegisum.com
+                    addnode=node1.aegisum.com:39940
                   </div>
                 </div>
               </CardContent>
@@ -111,7 +111,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node2.aegisum.com
+                    addnode=node2.aegisum.com:39940
                   </div>
                 </div>
               </CardContent>
@@ -170,58 +170,6 @@ export default async function NetworkPage() {
               </Button>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Mining Pool */}
-      <Card className="mb-8">
-        <CardHeader>
-          <CardTitle>Official Mining Pool</CardTitle>
-          <CardDescription>Mine Aegisum with the official pool</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <Card>
-            <CardContent className="p-6">
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-semibold">Mining Pool</h3>
-                  <div className="flex items-center mt-1">
-                    <Pickaxe className="h-4 w-4 text-primary mr-2" />
-                    <p className="font-medium">pool.aegisum.com</p>
-                  </div>
-                </div>
-                <Badge variant="outline" className="bg-amber-100 text-amber-800 dark:bg-amber-900 dark:text-amber-300">
-                  Mining Pool
-                </Badge>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-4">
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Pool Features</h4>
-                  <ul className="list-disc list-inside text-sm space-y-1">
-                    <li>Automatic payouts every 1 hour</li>
-                    <li>No registration required</li>
-                    <li>Proportional reward distribution</li>
-                    <li>Real-time statistics</li>
-                  </ul>
-                </div>
-
-                <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-2">Stratum Connection</h4>
-                  <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto mb-4">
-                    stratum+tcp://stratum.pool.aegisum.com:2922
-                  </div>
-
-                  <Button variant="outline" className="flex items-center" asChild>
-                    <Link href="https://pool.aegisum.com" target="_blank" rel="noopener noreferrer">
-                      Visit Mining Pool
-                      <ArrowUpRight className="ml-2 h-4 w-4" />
-                    </Link>
-                  </Button>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
         </CardContent>
       </Card>
 
