@@ -157,7 +157,6 @@ server {
 
 - Enable the site:
 ```bash
-# Enable site
 sudo ln -s /etc/nginx/sites-available/aegisum-explorer /etc/nginx/sites-enabled/
 ```
 
