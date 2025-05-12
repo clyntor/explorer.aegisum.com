@@ -54,12 +54,14 @@ export default async function BlocksPage({ searchParams }) {
                     <TableCell>{timeAgo(block.timestamp)}</TableCell>
                     <TableCell>{block.txCount}</TableCell>
                     <TableCell>
-                      <div className="flex items-center gap-2">
-                        <Link href={`/address/${block.minedBy}`} className="text-primary hover:underline">
-                          {formatHash(block.minedBy, 8)}
-                        </Link>
-                        <AddressTag address={block.minedBy} />
-                      </div>
+                      {block.minedBy && (
+                        <div className="flex items-center gap-2">
+                          <Link href={`/address/${block.minedBy}`} className="text-primary hover:underline">
+                            {formatHash(block.minedBy, 8)}
+                          </Link>
+                          <AddressTag address={block.minedBy} />
+                        </div>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))}
