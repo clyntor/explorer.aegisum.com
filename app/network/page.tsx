@@ -1,17 +1,21 @@
 export const dynamic = "force-dynamic"
+export const revalidate = 1800 // Revalidate every 30 minutes
 
 import Link from "next/link"
-import { getNetworkStats } from "@/lib/data"
+import { getNetworkStats, getPeerInfo } from "@/lib/data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { ArrowUpRight, Globe, Server, Zap } from "lucide-react"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ArrowUpRight, Globe, Server, Zap, Network, Clock } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { Badge } from "@/components/ui/badge"
 
 export default async function NetworkPage() {
   // Add error handling for data fetching
   let networkStats
+  let peerInfo
 
   try {
-    networkStats = await getNetworkStats()
+    ;[networkStats, peerInfo] = await Promise.all([getNetworkStats(), getPeerInfo()])
   } catch (error) {
     console.error("Error fetching network data:", error)
     // Provide fallback data
@@ -20,6 +24,7 @@ export default async function NetworkPage() {
       connections: 0,
       last_updated: Math.floor(Date.now() / 1000),
     }
+    peerInfo = []
   }
 
   return (
@@ -74,8 +79,8 @@ export default async function NetworkPage() {
 
             <div className="md:col-span-2 mt-4">
               <Button variant="outline" className="flex items-center" asChild>
-                <Link href="https://github.com/Aegisum/aegisum-core/releases" target="_blank" rel="noopener noreferrer">
-                  Download Aegisum Core
+                <Link href="https://aegisum.com/downloads" target="_blank" rel="noopener noreferrer">
+                  Download Aegisum Wallet
                   <ArrowUpRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
@@ -121,6 +126,57 @@ export default async function NetworkPage() {
                 </div>
               </CardContent>
             </Card>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Peer Information */}
+      <Card className="mb-8">
+        <CardHeader>
+          <div className="flex items-center justify-between">
+            <div>
+              <CardTitle className="flex items-center">
+                <Network className="mr-2 h-5 w-5" />
+                Connected Peers
+              </CardTitle>
+              <CardDescription>Information about currently connected peers</CardDescription>
+            </div>
+            <Badge variant="outline" className="flex items-center gap-1">
+              <Clock className="h-3 w-3" />
+              <span>Updates every 30 minutes</span>
+            </Badge>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>IP Address</TableHead>
+                  <TableHead>Protocol</TableHead>
+                  <TableHead>Connection Time</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {peerInfo && peerInfo.length > 0 ? (
+                  peerInfo.map((peer, index) => (
+                    <TableRow key={index}>
+                      <TableCell className="font-medium">{peer.addr || "Unknown"}</TableCell>
+                      <TableCell>{peer.version || "Unknown"}</TableCell>
+                      <TableCell>
+                        {peer.conntime ? new Date(peer.conntime * 1000).toLocaleString() : "Unknown"}
+                      </TableCell>
+                    </TableRow>
+                  ))
+                ) : (
+                  <TableRow>
+                    <TableCell colSpan={3} className="text-center py-4 text-muted-foreground">
+                      No peer information available
+                    </TableCell>
+                  </TableRow>
+                )}
+              </TableBody>
+            </Table>
           </div>
         </CardContent>
       </Card>
