@@ -741,22 +741,20 @@ export async function getMiningStats() {
   }
 }
 
+// Update the getPaginatedBlocks function to ensure it returns more blocks
 export async function getPaginatedBlocks(page = 1, limit = 20) {
   const { db } = await connectToDatabase()
 
-  // Get total count for pagination
-  const totalBlocks = await db.collection("blocks").countDocuments()
-
-  // If no blocks collection, fall back to txes
-  if (totalBlocks === 0) {
-    const distinctBlocks = await db.collection("txes").distinct("blockhash")
-    const totalCount = distinctBlocks.length
-
-    // Calculate pagination
-    const totalPages = Math.ceil(totalCount / limit)
+  try {
+    // Calculate skip value for pagination
     const skip = (page - 1) * limit
 
-    // Get blocks from txes
+    // Get distinct block hashes and count for pagination
+    const distinctBlockHashes = await db.collection("txes").distinct("blockhash")
+    const totalCount = distinctBlockHashes.length
+    const totalPages = Math.ceil(totalCount / limit)
+
+    // Get blocks from transactions collection using aggregation
     const blocks = await db
       .collection("txes")
       .aggregate([
@@ -785,17 +783,27 @@ export async function getPaginatedBlocks(page = 1, limit = 20) {
       ])
       .toArray()
 
-    return { blocks, pagination: { currentPage: page, totalPages, totalItems: totalCount } }
+    return {
+      blocks,
+      pagination: {
+        currentPage: page,
+        totalPages,
+        totalItems: totalCount,
+      },
+    }
+  } catch (error) {
+    console.error("Error fetching paginated blocks:", error)
+
+    // Return empty data with pagination info on error
+    return {
+      blocks: [],
+      pagination: {
+        currentPage: page,
+        totalPages: 1,
+        totalItems: 0,
+      },
+    }
   }
-
-  // Use blocks collection if available
-  const totalCount = totalBlocks
-  const totalPages = Math.ceil(totalCount / limit)
-  const skip = (page - 1) * limit
-
-  const blocks = await db.collection("blocks").find({}).sort({ height: -1 }).skip(skip).limit(limit).toArray()
-
-  return { blocks, pagination: { currentPage: page, totalPages, totalItems: totalCount } }
 }
 
 export async function getPaginatedTransactions(page = 1, limit = 20) {
