@@ -63,7 +63,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node.aegisum.com:39940
+                    addnode=node.aegisum.com
                   </div>
                 </div>
               </CardContent>
@@ -87,7 +87,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node1.aegisum.com:39940
+                    addnode=node1.aegisum.com
                   </div>
                 </div>
               </CardContent>
@@ -111,7 +111,7 @@ export default async function NetworkPage() {
                 <div className="mt-4">
                   <p className="text-sm text-muted-foreground mb-2">Add to your wallet configuration:</p>
                   <div className="bg-muted p-2 rounded-md font-mono text-xs overflow-x-auto">
-                    addnode=node2.aegisum.com:39940
+                    addnode=node2.aegisum.com
                   </div>
                 </div>
               </CardContent>
