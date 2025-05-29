@@ -1,3 +1,6 @@
+export const dynamic = "force-dynamic"
+export const revalidate = 60
+
 import Link from "next/link"
 import { formatNumber, formatHash, timeAgo } from "@/lib/utils"
 import { getLatestBlocks, getNetworkStats, getRecentTransactions } from "@/lib/data"
