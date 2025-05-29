@@ -1,5 +1,5 @@
 export const dynamic = "force-dynamic"
-export const revalidate = 60
+export const revalidate = 60 // Revalidate every 60 seconds (1 minute)
 
 import Link from "next/link"
 import { formatNumber, formatHash, timeAgo } from "@/lib/utils"
@@ -10,6 +10,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { BarChart2, Layers, Zap, DollarSign } from "lucide-react"
 import { AddressTag } from "@/components/address-tag"
 import { getKnownAddress } from "@/lib/known-addresses"
+import { AutoRefresh } from "@/components/auto-refresh"
 
 export default async function Home() {
   const [latestBlocks, networkStats, recentTxs, price] = await Promise.all([
@@ -25,6 +26,8 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-7xl">
+      <AutoRefresh interval={60} />
+
       <div className="flex flex-col items-center justify-center mb-8">
         <h1 className="text-3xl font-bold mb-2">Aegisum Blockchain Explorer</h1>
         <p className="text-muted-foreground mb-6">Explore the AEGS blockchain</p>
