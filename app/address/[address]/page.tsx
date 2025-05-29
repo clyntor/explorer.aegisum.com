@@ -21,40 +21,60 @@ export default async function AddressPage({ params, searchParams }) {
 
   const { transactions, pagination } = await getPaginatedAddressTransactions(address, page)
 
-  // Enrich transactions with full details to determine transaction type
+  // Enrich transactions with full details and calculate correct amounts
   const enrichedTransactions = await Promise.all(
     transactions.map(async (tx) => {
       const fullTx = await getTransactionById(tx.txid)
 
-      // Default to the existing amount and direction
-      let type = tx.amount > 0 ? "received" : "sent"
-      let amount = Math.abs(tx.amount)
-
-      if (fullTx) {
-        // Check if this is a self-send transaction
-        const isSender = fullTx.vin.some((input) => input.addresses === address)
-        const isReceiver = fullTx.vout.some((output) => output.addresses === address)
-
-        if (isSender && isReceiver) {
-          type = "self"
-
-          // For self-sends, calculate the net amount (received - sent)
-          const sent = fullTx.vin
-            .filter((input) => input.addresses === address)
-            .reduce((sum, input) => sum + input.amount, 0)
-
-          const received = fullTx.vout
-            .filter((output) => output.addresses === address)
-            .reduce((sum, output) => sum + output.amount, 0)
-
-          amount = received - sent
+      if (!fullTx) {
+        return {
+          ...tx,
+          type: tx.amount > 0 ? "received" : "sent",
+          displayAmount: Math.abs(tx.amount),
         }
+      }
+
+      // Calculate total amounts for this address in this transaction
+      let totalSent = 0
+      let totalReceived = 0
+
+      // Sum all inputs from this address
+      if (fullTx.vin && Array.isArray(fullTx.vin)) {
+        fullTx.vin.forEach((input) => {
+          if (input.addresses === address) {
+            totalSent += input.amount || 0
+          }
+        })
+      }
+
+      // Sum all outputs to this address
+      if (fullTx.vout && Array.isArray(fullTx.vout)) {
+        fullTx.vout.forEach((output) => {
+          if (output.addresses === address) {
+            totalReceived += output.amount || 0
+          }
+        })
+      }
+
+      // Determine transaction type and net amount
+      let type = "received"
+      let displayAmount = totalReceived
+
+      if (totalSent > 0 && totalReceived > 0) {
+        // Self-send transaction
+        type = "self"
+        displayAmount = totalReceived - totalSent
+      } else if (totalSent > 0) {
+        // Sent transaction
+        type = "sent"
+        displayAmount = totalSent
       }
 
       return {
         ...tx,
         type,
-        displayAmount: amount,
+        displayAmount: Math.abs(displayAmount),
+        netAmount: totalReceived - totalSent, // Keep track of net amount for display logic
       }
     }),
   )
@@ -168,10 +188,17 @@ export default async function AddressPage({ params, searchParams }) {
                   <TableCell className="text-right">
                     {tx.type === "sent" ? (
                       <span className="text-red-600 dark:text-red-400">
-                        -{formatNumber(Math.abs(tx.displayAmount) / 100000000)} AEGS
+                        -{formatNumber(tx.displayAmount / 100000000)} AEGS
+                      </span>
+                    ) : tx.type === "self" ? (
+                      <span className={tx.netAmount >= 0 ? "" : "text-red-600 dark:text-red-400"}>
+                        {tx.netAmount >= 0 ? "+" : ""}
+                        {formatNumber(Math.abs(tx.netAmount) / 100000000)} AEGS
                       </span>
                     ) : (
-                      <span>{formatNumber(Math.abs(tx.displayAmount) / 100000000)} AEGS</span>
+                      <span className="text-green-600 dark:text-green-400">
+                        +{formatNumber(tx.displayAmount / 100000000)} AEGS
+                      </span>
                     )}
                   </TableCell>
                 </TableRow>
