@@ -1,18 +1,18 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { formatNumber, formatTimestamp } from "@/lib/utils"
-import { getTransactionById } from "@/lib/data"
+import { getTransactionById, getNetworkStats } from "@/lib/data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { ArrowDownToLine, ArrowUpFromLine, Clock } from "lucide-react"
+import { ArrowDownToLine, ArrowUpFromLine, Clock, CheckCircle } from "lucide-react"
 import { AddressTag } from "@/components/address-tag"
 
 export default async function TransactionPage({ params }) {
   const { txid } = params
 
-  // Try to get the transaction from the database
-  const tx = await getTransactionById(txid)
+  // Try to get the transaction from the database and network stats
+  const [tx, networkStats] = await Promise.all([getTransactionById(txid), getNetworkStats()])
 
   if (!tx) {
     notFound()
@@ -20,6 +20,12 @@ export default async function TransactionPage({ params }) {
 
   // Check if this is a mempool transaction (no blockhash)
   const isPending = !tx.blockhash || tx.isPending
+
+  // Calculate confirmations for confirmed transactions
+  let confirmations = 0
+  if (!isPending && tx.blockindex && networkStats.count) {
+    confirmations = networkStats.count - tx.blockindex + 1
+  }
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-7xl">
@@ -73,12 +79,22 @@ export default async function TransactionPage({ params }) {
                   <Badge>{tx.tx_type}</Badge>
                 </div>
               )}
-              {tx.op_return && (
-                <div>
-                  <h3 className="text-sm font-medium text-muted-foreground mb-1">OP_RETURN</h3>
-                  <p className="font-mono text-sm break-all">{tx.op_return}</p>
-                </div>
-              )}
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground mb-1">Confirmations</h3>
+                {isPending ? (
+                  <div className="flex items-center gap-2">
+                    <Clock className="h-4 w-4 text-amber-500" />
+                    <span className="text-amber-600 dark:text-amber-400">Unconfirmed</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-2">
+                    <CheckCircle className="h-4 w-4 text-green-600" />
+                    <span className="text-green-600 dark:text-green-400 font-medium">
+                      {formatNumber(confirmations)}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </CardContent>
