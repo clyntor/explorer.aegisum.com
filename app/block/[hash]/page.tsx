@@ -1,18 +1,18 @@
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { formatNumber, formatHash, formatTimestamp } from "@/lib/utils"
-import { getBlockByHash, getTransactionsByBlockHash, getNextBlockHash } from "@/lib/data"
+import { getBlockByHash, getTransactionsByBlockHash, getNextBlockHash, getNetworkStats } from "@/lib/data"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Badge } from "@/components/ui/badge"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import { ChevronLeft, ChevronRight, CheckCircle } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { AddressTag } from "@/components/address-tag"
 import { getKnownAddress } from "@/lib/known-addresses"
 
 export default async function BlockPage({ params }) {
   const { hash } = params
-  const block = await getBlockByHash(hash)
+  const [block, networkStats] = await Promise.all([getBlockByHash(hash), getNetworkStats()])
 
   if (!block) {
     notFound()
@@ -26,6 +26,9 @@ export default async function BlockPage({ params }) {
   // Get miner information if available
   const minerAddress = transactions[0]?.vout[0]?.addresses
   const knownMiner = minerAddress ? getKnownAddress(minerAddress) : null
+
+  // Calculate confirmations
+  const confirmations = networkStats.count - block.height + 1
 
   return (
     <main className="container mx-auto px-4 py-6 max-w-7xl">
@@ -140,7 +143,13 @@ export default async function BlockPage({ params }) {
 
       <Card>
         <CardHeader>
-          <CardTitle>Block Transactions ({transactions.length})</CardTitle>
+          <CardTitle className="flex items-center justify-between">
+            <span>Block Transactions ({transactions.length})</span>
+            <div className="flex items-center gap-2">
+              <CheckCircle className="h-4 w-4 text-green-600" />
+              <span className="text-sm font-medium text-green-600">{formatNumber(confirmations)} Confirmations</span>
+            </div>
+          </CardTitle>
           <CardDescription>Transactions included in this block</CardDescription>
         </CardHeader>
         <CardContent>
