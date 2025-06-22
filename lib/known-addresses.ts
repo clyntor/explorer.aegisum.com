@@ -39,7 +39,7 @@ export const knownAddresses: KnownAddress[] = [
     address: "AtvEmmEnmsbTphC6ASaVJyCSu416XzpLmY",
     tag: "Official Pool",
     description: "Mining Pool",
-    url: "https://aegisum.com",
+    url: "https://pool.aegisum.com",
     type: "pool",
   },  
 ]
