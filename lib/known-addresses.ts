@@ -23,7 +23,7 @@ export const knownAddresses: KnownAddress[] = [
   },
   {
     address: "aegs1qvvpxjd25vecp69avrr3zt0jf5hukaw97a6xpqq",
-    tag: "hash-hut.net",
+    tag: "Hash Hut",
     description: "Mining Pool",
     url: "https://hash-hut.net",
     type: "pool",
@@ -35,14 +35,13 @@ export const knownAddresses: KnownAddress[] = [
     url: "https://clyntor.dev",
     type: "team",
   },
-  // Add more addresses here as needed
-  // {
-  //   address: "aegs1...",
-  //   tag: "Exchange",
-  //   description: "Some Exchange",
-  //   url: "https://example.com",
-  //   type: "exchange"
-  // },
+  {
+    address: "AtvEmmEnmsbTphC6ASaVJyCSu416XzpLmY",
+    tag: "Official Pool",
+    description: "Mining Pool",
+    url: "https://aegisum.com",
+    type: "pool",
+  },  
 ]
 
 // Map for quick lookups
