@@ -41,7 +41,13 @@ export const knownAddresses: KnownAddress[] = [
     description: "Mining Pool",
     url: "https://pool.aegisum.com",
     type: "pool",
-  },  
+  },
+  {
+    address: "aegs1q5wwgnxfxq9d4reeenhw2j4qg3sw8a9kkq0squ9",
+    tag: "Zerg Pool",
+    description: "Mining Pool",
+    url: "https://zergpool.com",
+    type: "pool",
 ]
 
 // Map for quick lookups
