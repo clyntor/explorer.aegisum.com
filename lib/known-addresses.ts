@@ -48,6 +48,14 @@ export const knownAddresses: KnownAddress[] = [
     description: "Mining Pool",
     url: "https://zergpool.com",
     type: "pool",
+  },
+  {
+    address: "Ay8EwfQ73qgbiPeyEgKBFuUNT5sr6UncsA",
+    tag: "Z Pool",
+    description: "Mining Pool",
+    url: "https://zpool.ca/",
+    type: "pool",
+  },  
 ]
 
 // Map for quick lookups
