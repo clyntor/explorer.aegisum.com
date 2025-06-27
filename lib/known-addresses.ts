@@ -62,6 +62,13 @@ export const knownAddresses: KnownAddress[] = [
     description: "Mining Pool",
     url: "https://pool.coin-miners.info/",
     type: "pool",
+  },
+  {
+    address: "AoKZeWjnUVjxrx1N8EnTKsX2i2viQ8pP6o",
+    tag: "Hulk Hash",
+    description: "Mining Pool",
+    url: "https://hulkhash.uk/",
+    type: "pool",
   },  
 ]
 
