@@ -311,103 +311,109 @@ export function MainNav() {
         </div>
       </header>
 
-      {/* Mobile Navigation Overlay */}
+      {/* Mobile Navigation Overlay - ONLY FIXED THE SCROLLING */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={toggleMobileMenu} />
-          <div className="fixed top-16 left-0 right-0 bottom-0 bg-[#0b0f1a] overflow-y-auto">
-            <div className="p-6">
-              <div className="space-y-6">
-                {/* Main Links */}
-                <div className="space-y-4">
-                  <Link
-                    href="https://aegisum.com"
-                    target="_blank"
-                    className="block text-gray-300 hover:text-white text-lg font-medium"
-                    onClick={toggleMobileMenu}
-                  >
-                    🏠 Main Site
-                  </Link>
-                </div>
-
-                {/* Explorer Section */}
-                <div className="border-t border-slate-700/30 pt-6">
-                  <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔍 Explorer</h3>
-                  <div className="space-y-3 pl-4">
-                    {/* Home Link for mobile */}
+          <div className="fixed top-16 left-0 right-0 bottom-0 bg-[#0b0f1a] flex flex-col">
+            {/* Scrollable content */}
+            <div className="flex-1 overflow-y-auto">
+              <div className="p-6">
+                <div className="space-y-6">
+                  {/* Main Links */}
+                  <div className="space-y-4">
                     <Link
-                      href="/"
-                      className={`flex items-center space-x-3 text-base ${
-                        pathname === "/" ? "text-blue-400" : "text-gray-300 hover:text-white"
-                      }`}
+                      href="https://aegisum.com"
+                      target="_blank"
+                      className="block text-gray-300 hover:text-white text-lg font-medium"
                       onClick={toggleMobileMenu}
                     >
-                      <Home className="h-4 w-4" />
-                      <span>Home</span>
+                      🏠 Main Site
                     </Link>
-                    {explorerRoutes.map((route) => (
+                  </div>
+
+                  {/* Explorer Section */}
+                  <div className="border-t border-slate-700/30 pt-6">
+                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔍 Explorer</h3>
+                    <div className="space-y-3 pl-4">
+                      {/* Home Link for mobile */}
                       <Link
-                        key={route.href}
-                        href={route.href}
+                        href="/"
                         className={`flex items-center space-x-3 text-base ${
-                          pathname === route.href ? "text-blue-400" : "text-gray-300 hover:text-white"
+                          pathname === "/" ? "text-blue-400" : "text-gray-300 hover:text-white"
                         }`}
                         onClick={toggleMobileMenu}
                       >
-                        {route.icon}
-                        <span>{route.label}</span>
+                        <Home className="h-4 w-4" />
+                        <span>Home</span>
                       </Link>
-                    ))}
+                      {explorerRoutes.map((route) => (
+                        <Link
+                          key={route.href}
+                          href={route.href}
+                          className={`flex items-center space-x-3 text-base ${
+                            pathname === route.href ? "text-blue-400" : "text-gray-300 hover:text-white"
+                          }`}
+                          onClick={toggleMobileMenu}
+                        >
+                          {route.icon}
+                          <span>{route.label}</span>
+                        </Link>
+                      ))}
+                    </div>
                   </div>
-                </div>
 
-                {/* External Links */}
-                <div className="border-t border-slate-700/30 pt-6">
-                  <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔗 External Links</h3>
-                  <div className="space-y-3 pl-4">
-                    <a
-                      href="https://pool.aegisum.com"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="block text-gray-300 hover:text-white text-base"
-                      onClick={toggleMobileMenu}
-                    >
-                      ⛏️ Mining Pool
-                    </a>
-                    <Link
-                      href="https://aegisum.com/news"
-                      target="_blank"
-                      className="block text-gray-300 hover:text-white text-base"
-                      onClick={toggleMobileMenu}
-                    >
-                      📰 News
-                    </Link>
+                  {/* External Links */}
+                  <div className="border-t border-slate-700/30 pt-6">
+                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔗 External Links</h3>
+                    <div className="space-y-3 pl-4">
+                      <a
+                        href="https://pool.aegisum.com"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block text-gray-300 hover:text-white text-base"
+                        onClick={toggleMobileMenu}
+                      >
+                        ⛏️ Mining Pool
+                      </a>
+                      <Link
+                        href="https://aegisum.com/news"
+                        target="_blank"
+                        className="block text-gray-300 hover:text-white text-base"
+                        onClick={toggleMobileMenu}
+                      >
+                        📰 News
+                      </Link>
+                    </div>
                   </div>
-                </div>
 
-                {/* Social Links */}
-                <div className="border-t border-slate-700/30 pt-6">
-                  <h3 className="text-blue-400 font-semibold mb-4 text-lg">💬 Community</h3>
-                  <div className="flex space-x-4 pl-4">
-                    <a
-                      href="https://discord.gg/4E5caDKkeP"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-gray-300 hover:text-white text-base"
-                      onClick={toggleMobileMenu}
-                    >
-                      Discord
-                    </a>
-                    <a
-                      href="https://x.com/aegisum"
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-gray-300 hover:text-white text-base"
-                      onClick={toggleMobileMenu}
-                    >
-                      Twitter
-                    </a>
+                  {/* Social Links */}
+                  <div className="border-t border-slate-700/30 pt-6">
+                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">💬 Community</h3>
+                    <div className="flex space-x-4 pl-4">
+                      <a
+                        href="https://discord.gg/4E5caDKkeP"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-gray-300 hover:text-white text-base"
+                        onClick={toggleMobileMenu}
+                      >
+                        Discord
+                      </a>
+                      <a
+                        href="https://x.com/aegisum"
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-gray-300 hover:text-white text-base"
+                        onClick={toggleMobileMenu}
+                      >
+                        Twitter
+                      </a>
+                    </div>
                   </div>
+
+                  {/* Extra padding for safe scrolling */}
+                  <div className="h-8"></div>
                 </div>
               </div>
             </div>

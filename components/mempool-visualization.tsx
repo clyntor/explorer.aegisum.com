@@ -103,14 +103,14 @@ export function MempoolVisualization({ transactions, stats }: MempoolVisualizati
 
   // Helper function to format value for display (compact version with AEGS)
   const formatValue = (value: number | null) => {
-    if (value === null || value === 0) return "0 AEGS"
-    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M AEGS`
-    if (value >= 1000) return `${(value / 1000).toFixed(1)}K AEGS`
-    if (value >= 100) return `${Math.round(value)} AEGS`
-    if (value >= 10) return `${value.toFixed(0)} AEGS`
-    if (value >= 1) return `${value.toFixed(1)} AEGS`
-    if (value >= 0.01) return `${value.toFixed(2)} AEGS`
-    return `${value.toFixed(3)} AEGS`
+    if (value === null || value === 0) return "0"
+    if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`
+    if (value >= 1000) return `${(value / 1000).toFixed(1)}K`
+    if (value >= 100) return `${Math.round(value)}`
+    if (value >= 10) return `${value.toFixed(0)}`
+    if (value >= 1) return `${value.toFixed(1)}`
+    if (value >= 0.01) return `${value.toFixed(2)}`
+    return `${value.toFixed(3)}`
   }
 
   // Generate transaction blocks for visualization
@@ -119,7 +119,7 @@ export function MempoolVisualization({ transactions, stats }: MempoolVisualizati
     const displayTransactions = transactions.slice(0, 100)
 
     return (
-      <div className="grid grid-cols-10 gap-1 mt-4">
+      <div className="grid grid-cols-5 sm:grid-cols-15 md:grid-cols-20 gap-2 sm:gap-1 mt-4">
         {displayTransactions.map((tx, index) => {
           // Determine color based on "age" in mempool
           const now = Math.floor(Date.now() / 1000)
@@ -131,7 +131,7 @@ export function MempoolVisualization({ transactions, stats }: MempoolVisualizati
             bgColor = "bg-red-500" // Older than 1 hour
           else if (age > 1800)
             bgColor = "bg-orange-500" // Older than 30 minutes
-          else if (age > 600) bgColor = "bg-yellow-500" // Older than 10 minutes
+          else if (age > 600) bgColor = "bg-slate-500" // Older than 10 minutes
 
           const txValue = getTransactionValue(tx)
           const valueText = formatValue(txValue)
@@ -139,12 +139,29 @@ export function MempoolVisualization({ transactions, stats }: MempoolVisualizati
           return (
             <div
               key={tx.txid || index}
-              className={`${bgColor} h-6 rounded-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md relative group flex items-center justify-center`}
-              title={`Transaction: ${tx.txid || "Unknown"}${txValue ? `\nValue: ${txValue} AEGS` : ""}\nTime in pool: ${Math.floor(age / 60)} minutes${tx.fee ? `\nFee: ${tx.fee} AEGS` : ""}`}
+              className={`${bgColor} min-h-[3rem] sm:h-6 rounded-sm cursor-pointer transition-all hover:scale-105 hover:shadow-md relative group flex flex-col sm:flex-row items-center justify-center p-1 sm:p-0`}
+              title={`Transaction: ${tx.txid || "Unknown"}${
+                txValue
+                  ? `
+Value: ${txValue} AEGS`
+                  : ""
+              }
+Time in pool: ${Math.floor(age / 60)} minutes${
+                tx.fee
+                  ? `
+Fee: ${tx.fee} AEGS`
+                  : ""
+              }`}
               onClick={() => tx.txid && (window.location.href = `/tx/${tx.txid}`)}
             >
-              {/* Always show value inside the block */}
-              <span className="text-white text-xs font-bold drop-shadow-sm">{valueText}</span>
+              {/* Mobile: Show value and AEGS on separate lines */}
+              <div className="text-white text-center sm:hidden">
+                <div className="text-xs font-bold leading-tight">{valueText}</div>
+                <div className="text-[10px] opacity-90 leading-tight">AEGS</div>
+              </div>
+
+              {/* Desktop: Show value inline */}
+              <span className="hidden sm:inline text-white text-xs font-bold drop-shadow-sm">{valueText}</span>
             </div>
           )
         })}
@@ -157,24 +174,24 @@ export function MempoolVisualization({ transactions, stats }: MempoolVisualizati
       {/* Transaction Visualization */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex justify-between items-center mb-4">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 gap-4">
             <h3 className="text-lg font-medium">Pending Transactions</h3>
-            <div className="flex items-center space-x-4 text-sm">
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-blue-500 mr-2"></div>
-                <span>Recent</span>
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                <span className="whitespace-nowrap">Recent</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-yellow-500 mr-2"></div>
-                <span>10+ min</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-slate-500"></div>
+                <span className="whitespace-nowrap">10+ min</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-                <span>30+ min</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-orange-500"></div>
+                <span className="whitespace-nowrap">30+ min</span>
               </div>
-              <div className="flex items-center">
-                <div className="w-3 h-3 rounded-full bg-red-500 mr-2"></div>
-                <span>60+ min</span>
+              <div className="flex items-center gap-2">
+                <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                <span className="whitespace-nowrap">60+ min</span>
               </div>
             </div>
           </div>
