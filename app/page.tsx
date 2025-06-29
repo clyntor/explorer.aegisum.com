@@ -7,7 +7,7 @@ import { getLatestBlocks, getNetworkStats, getRecentTransactions } from "@/lib/d
 import { getAegsPrice } from "@/lib/price"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { BarChart2, Layers, Zap, DollarSign } from "lucide-react"
+import { BarChart2, Zap, DollarSign, TrendingUp } from "lucide-react"
 import { AddressTag } from "@/components/address-tag"
 import { getKnownAddress } from "@/lib/known-addresses"
 import { AutoRefresh } from "@/components/auto-refresh"
@@ -24,6 +24,13 @@ export default async function Home() {
   const priceValue = Number.parseFloat(price)
   const formattedPrice = priceValue < 0.01 ? `$${priceValue.toFixed(8)}` : `$${priceValue.toFixed(4)}`
 
+  // Calculate market cap and show full dollar amount
+  const marketCap = networkStats.supply * priceValue
+  const formattedMarketCap = `$${marketCap.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  })}`
+
   return (
     <main className="container mx-auto px-4 py-6 max-w-7xl">
       <AutoRefresh interval={60} />
@@ -35,28 +42,28 @@ export default async function Home() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <StatCard
-          title="Blocks"
-          value={formatNumber(networkStats.count)}
-          description="Total blocks"
-          icon={<Layers className="h-5 w-5" />}
-        />
-        <StatCard
           title="Price (USDT)"
           value={formattedPrice}
           description="TradeOgre AEGS/USDT"
           icon={<DollarSign className="h-5 w-5" />}
         />
         <StatCard
-          title="Network Hashrate"
-          value={`${networkStats.nethash.toFixed(4)} GH/s`}
-          description="Current hashrate"
-          icon={<Zap className="h-5 w-5" />}
+          title="Market Cap"
+          value={formattedMarketCap}
+          description="Current market capitalization"
+          icon={<TrendingUp className="h-5 w-5" />}
         />
         <StatCard
           title="Circulating Supply"
           value={`${formatNumber(networkStats.supply)} AEGS`}
           description="Current supply"
           icon={<BarChart2 className="h-5 w-5" />}
+        />
+        <StatCard
+          title="Network Hashrate"
+          value={`${networkStats.nethash.toFixed(4)} GH/s`}
+          description="Current hashrate"
+          icon={<Zap className="h-5 w-5" />}
         />
       </div>
 
@@ -220,22 +227,22 @@ function StatCard({ title, value, description, icon }) {
   let textColor = "text-primary"
   let gradientClasses = ""
 
-  if (title === "Blocks") {
-    bgColor = "bg-blue-100 dark:bg-blue-900/30"
-    textColor = "text-blue-600 dark:text-blue-400"
-    gradientClasses = "bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900/50"
-  } else if (title === "Price (USDT)") {
+  if (title === "Price (USDT)") {
     bgColor = "bg-green-100 dark:bg-green-900/30"
     textColor = "text-green-600 dark:text-green-400"
     gradientClasses = "bg-gradient-to-br from-green-50 to-green-100 dark:from-green-950 dark:to-green-900/50"
-  } else if (title === "Network Hashrate") {
-    bgColor = "bg-purple-100 dark:bg-purple-900/30"
-    textColor = "text-purple-600 dark:text-purple-400"
-    gradientClasses = "bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900/50"
+  } else if (title === "Market Cap") {
+    bgColor = "bg-blue-100 dark:bg-blue-900/30"
+    textColor = "text-blue-600 dark:text-blue-400"
+    gradientClasses = "bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-950 dark:to-blue-900/50"
   } else if (title === "Circulating Supply") {
     bgColor = "bg-amber-100 dark:bg-amber-900/30"
     textColor = "text-amber-600 dark:text-amber-400"
     gradientClasses = "bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-950 dark:to-amber-900/50"
+  } else if (title === "Network Hashrate") {
+    bgColor = "bg-purple-100 dark:bg-purple-900/30"
+    textColor = "text-purple-600 dark:text-purple-400"
+    gradientClasses = "bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-950 dark:to-purple-900/50"
   }
 
   return (
