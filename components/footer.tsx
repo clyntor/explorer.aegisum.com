@@ -16,7 +16,7 @@ export function Footer() {
             className="text-sm font-medium flex items-center gap-1.5 hover:text-primary transition-colors"
           >
             <Github className="h-4 w-4" />
-            <span>Explorer v1.2</span>
+            <span>Explorer v1.21</span>
           </Link>
           <span className="text-muted-foreground">•</span>
           <Link
