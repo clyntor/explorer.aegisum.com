@@ -3,7 +3,21 @@
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { BarChart2, Clock, Layers, List, Menu, Pickaxe, Globe, ChevronDown, X, Home } from "lucide-react"
+import {
+  BarChart2,
+  Clock,
+  Layers,
+  List,
+  Menu,
+  Pickaxe,
+  Globe,
+  ChevronDown,
+  X,
+  Home,
+  ExternalLink,
+  Newspaper,
+  MessageCircle,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SearchBar } from "@/components/search-bar"
 import { useState, useEffect, useRef } from "react"
@@ -311,7 +325,7 @@ export function MainNav() {
         </div>
       </header>
 
-      {/* Mobile Navigation Overlay - ONLY FIXED THE SCROLLING */}
+      {/* Mobile Navigation Overlay - WITH REACT ICONS */}
       {isMobileMenuOpen && (
         <div className="fixed inset-0 z-40 lg:hidden">
           <div className="fixed inset-0 bg-black/50" onClick={toggleMobileMenu} />
@@ -320,21 +334,28 @@ export function MainNav() {
             <div className="flex-1 overflow-y-auto">
               <div className="p-6">
                 <div className="space-y-6">
+                  {/* Extra whitespace at top */}
+                  <div className="h-4"></div>
+
                   {/* Main Links */}
                   <div className="space-y-4">
                     <Link
                       href="https://aegisum.com"
                       target="_blank"
-                      className="block text-gray-300 hover:text-white text-lg font-medium"
+                      className="flex items-center space-x-3 text-gray-300 hover:text-white text-lg font-medium"
                       onClick={toggleMobileMenu}
                     >
-                      🏠 Main Site
+                      <Home className="h-5 w-5" />
+                      <span>Main Site</span>
                     </Link>
                   </div>
 
                   {/* Explorer Section */}
                   <div className="border-t border-slate-700/30 pt-6">
-                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔍 Explorer</h3>
+                    <h3 className="flex items-center space-x-2 text-blue-400 font-semibold mb-4 text-lg">
+                      <Globe className="h-5 w-5" />
+                      <span>Explorer</span>
+                    </h3>
                     <div className="space-y-3 pl-4">
                       {/* Home Link for mobile */}
                       <Link
@@ -365,31 +386,39 @@ export function MainNav() {
 
                   {/* External Links */}
                   <div className="border-t border-slate-700/30 pt-6">
-                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">🔗 External Links</h3>
+                    <h3 className="flex items-center space-x-2 text-blue-400 font-semibold mb-4 text-lg">
+                      <ExternalLink className="h-5 w-5" />
+                      <span>External Links</span>
+                    </h3>
                     <div className="space-y-3 pl-4">
                       <a
                         href="https://pool.aegisum.com"
                         target="_blank"
                         rel="noreferrer"
-                        className="block text-gray-300 hover:text-white text-base"
+                        className="flex items-center space-x-3 text-gray-300 hover:text-white text-base"
                         onClick={toggleMobileMenu}
                       >
-                        ⛏️ Mining Pool
+                        <Pickaxe className="h-4 w-4" />
+                        <span>Mining Pool</span>
                       </a>
                       <Link
                         href="https://aegisum.com/news"
                         target="_blank"
-                        className="block text-gray-300 hover:text-white text-base"
+                        className="flex items-center space-x-3 text-gray-300 hover:text-white text-base"
                         onClick={toggleMobileMenu}
                       >
-                        📰 News
+                        <Newspaper className="h-4 w-4" />
+                        <span>News</span>
                       </Link>
                     </div>
                   </div>
 
                   {/* Social Links */}
                   <div className="border-t border-slate-700/30 pt-6">
-                    <h3 className="text-blue-400 font-semibold mb-4 text-lg">💬 Community</h3>
+                    <h3 className="flex items-center space-x-2 text-blue-400 font-semibold mb-4 text-lg">
+                      <MessageCircle className="h-5 w-5" />
+                      <span>Community</span>
+                    </h3>
                     <div className="flex space-x-4 pl-4">
                       <a
                         href="https://discord.gg/4E5caDKkeP"
