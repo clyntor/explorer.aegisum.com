@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getAegsPrice } from "@/lib/price"
+import { getNetworkStats } from "@/lib/data"
 import { rateLimit } from "@/lib/rate-limit"
 
 export async function GET(request: NextRequest) {
@@ -18,9 +18,9 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const price = await getAegsPrice()
+    const networkStats = await getNetworkStats()
 
-    return new NextResponse(price, {
+    return new NextResponse(networkStats.supply.toString(), {
       status: 200,
       headers: {
         "Content-Type": "text/plain",
@@ -28,9 +28,9 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error("Error in price API route:", error)
+    console.error("Error in supply API route:", error)
 
-    return new NextResponse("0.00000000", {
+    return new NextResponse("0", {
       status: 500,
       headers: {
         "Content-Type": "text/plain",

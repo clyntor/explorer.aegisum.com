@@ -1,4 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
+import { getNetworkStats } from "@/lib/data"
 import { getAegsPrice } from "@/lib/price"
 import { rateLimit } from "@/lib/rate-limit"
 
@@ -18,9 +19,12 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const price = await getAegsPrice()
+    const [networkStats, price] = await Promise.all([getNetworkStats(), getAegsPrice()])
 
-    return new NextResponse(price, {
+    const priceNumber = Number.parseFloat(price)
+    const marketCap = networkStats.supply * priceNumber
+
+    return new NextResponse(marketCap.toFixed(2), {
       status: 200,
       headers: {
         "Content-Type": "text/plain",
@@ -28,9 +32,9 @@ export async function GET(request: NextRequest) {
       },
     })
   } catch (error) {
-    console.error("Error in price API route:", error)
+    console.error("Error in market-cap API route:", error)
 
-    return new NextResponse("0.00000000", {
+    return new NextResponse("0.00", {
       status: 500,
       headers: {
         "Content-Type": "text/plain",

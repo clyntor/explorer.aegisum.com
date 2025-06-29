@@ -1,5 +1,4 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getAegsPrice } from "@/lib/price"
 import { rateLimit } from "@/lib/rate-limit"
 
 export async function GET(request: NextRequest) {
@@ -18,19 +17,20 @@ export async function GET(request: NextRequest) {
       })
     }
 
-    const price = await getAegsPrice()
+    // Max supply is always 100 million AEGS
+    const maxSupply = 100000000
 
-    return new NextResponse(price, {
+    return new NextResponse(maxSupply.toString(), {
       status: 200,
       headers: {
         "Content-Type": "text/plain",
-        "Cache-Control": "public, max-age=30",
+        "Cache-Control": "public, max-age=3600", // Cache for 1 hour since this never changes
       },
     })
   } catch (error) {
-    console.error("Error in price API route:", error)
+    console.error("Error in max-supply API route:", error)
 
-    return new NextResponse("0.00000000", {
+    return new NextResponse("100000000", {
       status: 500,
       headers: {
         "Content-Type": "text/plain",
