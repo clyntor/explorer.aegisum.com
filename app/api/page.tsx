@@ -220,13 +220,13 @@ export default function APIPage() {
           <CardContent className="space-y-4">
             <div>
               <p className="text-sm font-medium mb-2">Get current price:</p>
-              <code className="block bg-slate-100 dark:bg-slate-800 p-3 rounded text-sm">
+              <code className="block bg-slate-100 dark:bg-slate-800 p-3 rounded text-sm break-all">
                 curl https://explorer.aegisum.com/api/price
               </code>
             </div>
             <div>
               <p className="text-sm font-medium mb-2">Get all data as JSON:</p>
-              <code className="block bg-slate-100 dark:bg-slate-800 p-3 rounded text-sm">
+              <code className="block bg-slate-100 dark:bg-slate-800 p-3 rounded text-sm break-all">
                 curl https://explorer.aegisum.com/api/summary
               </code>
             </div>

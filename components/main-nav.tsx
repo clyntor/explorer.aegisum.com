@@ -17,6 +17,7 @@ import {
   ExternalLink,
   Newspaper,
   MessageCircle,
+  Code,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { SearchBar } from "@/components/search-bar"
@@ -54,6 +55,7 @@ export function MainNav() {
     { href: "/mining", label: "Mining", icon: <Pickaxe className="h-4 w-4" /> },
     { href: "/richlist", label: "Rich List", icon: <BarChart2 className="h-4 w-4" /> },
     { href: "/network", label: "Network", icon: <Globe className="h-4 w-4" /> },
+    { href: "/api", label: "API", icon: <Code className="h-4 w-4" /> },
   ]
 
   const toggleDropdown = (dropdownName, e) => {
