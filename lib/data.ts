@@ -82,7 +82,7 @@ export async function getLatestBlocks(limit = 10) {
   try {
     const { db } = await connectToDatabase()
 
-    // We need to create a blocks collection based on txes data
+    // Get blocks with proper coinbase miner detection
     const blocks = await db
       .collection("txes")
       .aggregate([
@@ -94,17 +94,32 @@ export async function getLatestBlocks(limit = 10) {
             hash: { $first: "$blockhash" },
             timestamp: { $first: "$timestamp" },
             txCount: { $sum: 1 },
+            transactions: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $addFields: {
             minedBy: {
-              $first: {
-                $cond: [
-                  { $eq: [{ $arrayElemAt: ["$vin.addresses", 0] }, "coinbase"] },
-                  { $arrayElemAt: ["$vout.addresses", 0] },
-                  { $arrayElemAt: ["$vin.addresses", 0] },
-                ],
+              $let: {
+                vars: {
+                  coinbaseTx: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$transactions",
+                          cond: { $eq: [{ $arrayElemAt: ["$$this.vin.addresses", 0] }, "coinbase"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: { $arrayElemAt: ["$$coinbaseTx.vout.addresses", 0] },
               },
             },
           },
         },
+        { $project: { transactions: 0 } }, // Remove transactions array to keep response clean
         { $sort: { height: -1 } },
         { $limit: limit },
       ])
@@ -373,7 +388,7 @@ export async function getNetworkHistory(limit = 30) {
   return history
 }
 
-// Update the getMempoolTransactions function to ensure it returns the expected data structure
+// Enhanced getMempoolTransactions function that enriches transactions with actual values
 export async function getMempoolTransactions() {
   const { db } = await connectToDatabase()
 
@@ -423,15 +438,95 @@ export async function getMempoolTransactions() {
       // Continue with database data if RPC fails
     }
 
+    // Enrich transactions with actual values by getting raw transaction data
+    const enrichedTransactions = []
+
+    for (const tx of transactions.slice(0, 20)) {
+      // Limit to 20 for performance
+      try {
+        // Get the raw transaction to extract vin/vout amounts
+        const rawTx = await getRawTransaction(tx.txid)
+
+        if (rawTx) {
+          let totalValue = 0
+          const vin = []
+          const vout = []
+
+          // Process outputs to get total value
+          if (rawTx.vout && Array.isArray(rawTx.vout)) {
+            for (const output of rawTx.vout) {
+              const addresses = output.scriptPubKey?.addresses || []
+              const amount = Math.round((output.value || 0) * 100000000) // Convert to satoshis
+
+              if (addresses.length > 0) {
+                vout.push({
+                  addresses: addresses[0],
+                  amount: amount,
+                })
+                totalValue += amount
+              }
+            }
+          }
+
+          // Process inputs
+          if (rawTx.vin && Array.isArray(rawTx.vin)) {
+            for (const input of rawTx.vin) {
+              if (input.coinbase) {
+                vin.push({
+                  addresses: "coinbase",
+                  amount: 0,
+                })
+              } else if (input.txid) {
+                // For mempool visualization, we don't need to fetch all input details
+                // Just mark as regular input
+                vin.push({
+                  addresses: "input",
+                  amount: 0,
+                })
+              }
+            }
+          }
+
+          // Add enriched transaction
+          enrichedTransactions.push({
+            ...tx,
+            vin,
+            vout,
+            total: totalValue, // Total in satoshis
+            value: totalValue / 100000000, // Total in AEGS
+          })
+        } else {
+          // If we can't get raw transaction, add basic info
+          enrichedTransactions.push({
+            ...tx,
+            vin: [],
+            vout: [],
+            total: 0,
+            value: 0,
+          })
+        }
+      } catch (error) {
+        console.error(`Error enriching transaction ${tx.txid}:`, error)
+        // Add basic transaction info on error
+        enrichedTransactions.push({
+          ...tx,
+          vin: [],
+          vout: [],
+          total: 0,
+          value: 0,
+        })
+      }
+    }
+
     // Ensure all transactions have the required fields
-    transactions = transactions.map((tx) => ({
+    const finalTransactions = enrichedTransactions.map((tx) => ({
       ...tx,
       txid: tx.txid || "",
       size: tx.size || 0,
       time: tx.time || Math.floor(Date.now() / 1000),
     }))
 
-    return { transactions, stats }
+    return { transactions: finalTransactions, stats }
   } catch (error) {
     console.error("Error fetching mempool data:", error)
     // Return empty data if there's an error
@@ -741,7 +836,7 @@ export async function getMiningStats() {
   }
 }
 
-// Update the getPaginatedBlocks function to ensure it returns more blocks
+// Fixed getPaginatedBlocks function with proper coinbase miner detection
 export async function getPaginatedBlocks(page = 1, limit = 20) {
   const { db } = await connectToDatabase()
 
@@ -754,7 +849,7 @@ export async function getPaginatedBlocks(page = 1, limit = 20) {
     const totalCount = distinctBlockHashes.length
     const totalPages = Math.ceil(totalCount / limit)
 
-    // Get blocks from transactions collection using aggregation
+    // Get blocks with proper coinbase miner detection
     const blocks = await db
       .collection("txes")
       .aggregate([
@@ -766,17 +861,32 @@ export async function getPaginatedBlocks(page = 1, limit = 20) {
             hash: { $first: "$blockhash" },
             timestamp: { $first: "$timestamp" },
             txCount: { $sum: 1 },
+            transactions: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $addFields: {
             minedBy: {
-              $first: {
-                $cond: [
-                  { $eq: [{ $arrayElemAt: ["$vin.addresses", 0] }, "coinbase"] },
-                  { $arrayElemAt: ["$vout.addresses", 0] },
-                  { $arrayElemAt: ["$vin.addresses", 0] },
-                ],
+              $let: {
+                vars: {
+                  coinbaseTx: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$transactions",
+                          cond: { $eq: [{ $arrayElemAt: ["$$this.vin.addresses", 0] }, "coinbase"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: { $arrayElemAt: ["$$coinbaseTx.vout.addresses", 0] },
               },
             },
           },
         },
+        { $project: { transactions: 0 } }, // Remove transactions array to keep response clean
         { $sort: { height: -1 } },
         { $skip: skip },
         { $limit: limit },
