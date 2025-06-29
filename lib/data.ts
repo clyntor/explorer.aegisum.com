@@ -82,7 +82,7 @@ export async function getLatestBlocks(limit = 10) {
   try {
     const { db } = await connectToDatabase()
 
-    // We need to create a blocks collection based on txes data
+    // Get blocks with proper coinbase miner detection
     const blocks = await db
       .collection("txes")
       .aggregate([
@@ -94,17 +94,32 @@ export async function getLatestBlocks(limit = 10) {
             hash: { $first: "$blockhash" },
             timestamp: { $first: "$timestamp" },
             txCount: { $sum: 1 },
+            transactions: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $addFields: {
             minedBy: {
-              $first: {
-                $cond: [
-                  { $eq: [{ $arrayElemAt: ["$vin.addresses", 0] }, "coinbase"] },
-                  { $arrayElemAt: ["$vout.addresses", 0] },
-                  { $arrayElemAt: ["$vin.addresses", 0] },
-                ],
+              $let: {
+                vars: {
+                  coinbaseTx: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$transactions",
+                          cond: { $eq: [{ $arrayElemAt: ["$$this.vin.addresses", 0] }, "coinbase"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: { $arrayElemAt: ["$$coinbaseTx.vout.addresses", 0] },
               },
             },
           },
         },
+        { $project: { transactions: 0 } }, // Remove transactions array to keep response clean
         { $sort: { height: -1 } },
         { $limit: limit },
       ])
@@ -741,7 +756,7 @@ export async function getMiningStats() {
   }
 }
 
-// Update the getPaginatedBlocks function to ensure it returns more blocks
+// Fixed getPaginatedBlocks function with proper coinbase miner detection
 export async function getPaginatedBlocks(page = 1, limit = 20) {
   const { db } = await connectToDatabase()
 
@@ -754,7 +769,7 @@ export async function getPaginatedBlocks(page = 1, limit = 20) {
     const totalCount = distinctBlockHashes.length
     const totalPages = Math.ceil(totalCount / limit)
 
-    // Get blocks from transactions collection using aggregation
+    // Get blocks with proper coinbase miner detection
     const blocks = await db
       .collection("txes")
       .aggregate([
@@ -766,17 +781,32 @@ export async function getPaginatedBlocks(page = 1, limit = 20) {
             hash: { $first: "$blockhash" },
             timestamp: { $first: "$timestamp" },
             txCount: { $sum: 1 },
+            transactions: { $push: "$$ROOT" },
+          },
+        },
+        {
+          $addFields: {
             minedBy: {
-              $first: {
-                $cond: [
-                  { $eq: [{ $arrayElemAt: ["$vin.addresses", 0] }, "coinbase"] },
-                  { $arrayElemAt: ["$vout.addresses", 0] },
-                  { $arrayElemAt: ["$vin.addresses", 0] },
-                ],
+              $let: {
+                vars: {
+                  coinbaseTx: {
+                    $arrayElemAt: [
+                      {
+                        $filter: {
+                          input: "$transactions",
+                          cond: { $eq: [{ $arrayElemAt: ["$$this.vin.addresses", 0] }, "coinbase"] },
+                        },
+                      },
+                      0,
+                    ],
+                  },
+                },
+                in: { $arrayElemAt: ["$$coinbaseTx.vout.addresses", 0] },
               },
             },
           },
         },
+        { $project: { transactions: 0 } }, // Remove transactions array to keep response clean
         { $sort: { height: -1 } },
         { $skip: skip },
         { $limit: limit },
