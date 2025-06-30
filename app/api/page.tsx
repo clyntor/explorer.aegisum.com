@@ -166,6 +166,84 @@ export default function APIPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Difficulty */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Difficulty</CardTitle>
+                <CardDescription>Get the current difficulty</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/difficulty"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/difficulty
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">26012.051</code>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Network Hashrate */}       
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Network Hashrate</CardTitle>
+                <CardDescription>Get the current network hashrate in GH/s</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/network-hashrate"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/network-hashrate
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">534.2200 GH/s</code>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Peers */}       
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Peers</CardTitle>
+                <CardDescription>Get the number of connections the block explorer has to other nodes</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/peers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/peers
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">22</code>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <Separator />
