@@ -188,7 +188,7 @@ export default function APIPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium mb-1">Example Output:</p>
-                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">26012.05097146179</code>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">26012.051</code>
                 </div>
               </CardContent>
             </Card>
@@ -197,7 +197,7 @@ export default function APIPage() {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-lg">Network Hashrate</CardTitle>
-                <CardDescription>Get the current network hashrate</CardDescription>
+                <CardDescription>Get the current network hashrate in GH/s</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 <div className="flex items-center gap-2">
@@ -214,7 +214,7 @@ export default function APIPage() {
                 </div>
                 <div>
                   <p className="text-sm font-medium mb-1">Example Output:</p>
-                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">534220037016.8556</code>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">534.2200 GH/s</code>
                 </div>
               </CardContent>
             </Card>
