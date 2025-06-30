@@ -166,6 +166,84 @@ export default function APIPage() {
                 </div>
               </CardContent>
             </Card>
+
+            {/* Difficulty */}
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Difficulty</CardTitle>
+                <CardDescription>Get the current difficulty</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/difficulty"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/difficulty
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">20574.6753725802</code>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Network Hashrate */}       
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Network Hashrate</CardTitle>
+                <CardDescription>Get the current network hashrate (hash/s)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/network-hashrate"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/network-hashrate
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">473377087815.4365</code>
+                </div>
+              </CardContent>
+            </Card>
+
+            {/* Peers */}       
+            <Card>
+              <CardHeader className="pb-3">
+                <CardTitle className="text-lg">Peers</CardTitle>
+                <CardDescription>Get the number of connections the block explorer has to other nodes</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3">
+                <div className="flex items-center gap-2">
+                  <Badge variant="outline">Plain Text</Badge>
+                  <a
+                    href="https://explorer.aegisum.com/api/peers"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-600 hover:underline font-mono text-sm flex items-center gap-1"
+                  >
+                    /api/peers
+                    <ExternalLink className="h-3 w-3" />
+                  </a>
+                </div>
+                <div>
+                  <p className="text-sm font-medium mb-1">Example Output:</p>
+                  <code className="block bg-slate-100 dark:bg-slate-800 p-2 rounded text-sm">22</code>
+                </div>
+              </CardContent>
+            </Card>
           </div>
 
           <Separator />
@@ -197,9 +275,12 @@ export default function APIPage() {
                   {`{
   "blockHeight": { "value": 34411, "formatted": "34,411" },
   "currentSupply": { "value": 19804000, "formatted": "19,804,000" },
-  "maxSupply": { "value": 100000000, "formatted": "100,000,000" },
-  "price": { "value": 0.00077, "formatted": "$0.00077000" },
+  "difficulty": { "value": 20574.6753725802, "formatted": "20,574.6753" },
   "marketCap": { "value": 15249.08, "formatted": "$15,249.08" },
+  "maxSupply": { "value": 100000000, "formatted": "100,000,000" },
+  "price": { "value": 0.00077000, "formatted": "$0.00077" },
+  "networkHashRate": { "value": 473377087815.4365, "formatted": "473.3771 GH/s" },
+  "peers": { "value": 22, "formatted": "22" },
   "supplyPercentage": { "value": 19.804, "formatted": "19.80%" },
   "timestamp": "2025-06-29T18:28:36.792Z",
   "network": "Aegisum",

@@ -1,5 +1,5 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { getNetworkStats } from "@/lib/data"
+import { getNetworkStats, rpcCall } from "@/lib/data"
 import { getAegsPrice } from "@/lib/price"
 import { rateLimit } from "@/lib/rate-limit"
 
@@ -26,7 +26,8 @@ export async function GET(request: NextRequest) {
     const priceNumber = Number.parseFloat(price)
     const maxSupply = 100000000 // 100 million AEGS
     const marketCap = networkStats.supply * priceNumber
-
+    const networkHashRate = await rpcCall("getnetworkhashps", [120, -1])
+    
     return NextResponse.json(
       {
         blockHeight: {
@@ -37,17 +38,29 @@ export async function GET(request: NextRequest) {
           value: networkStats.supply,
           formatted: networkStats.supply.toLocaleString(),
         },
+        difficulty: {
+          value: networkStats.difficulty_pow,
+          formatted: Number(networkStats.difficulty_pow).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 })
+        },
+        marketCap: {
+          value: marketCap,
+          formatted: `$${marketCap.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 })}`,
+        },
         maxSupply: {
           value: maxSupply,
           formatted: maxSupply.toLocaleString(),
         },
+        networkHashRate: {
+          value: networkHashRate,
+          formatted: `${Number(networkHashRate / 1000000000)} GH/s`
+        },
+        peers: {
+          value: networkStats.connections,
+          formatted: networkStats.connections.toLocaleString()
+        },
         price: {
           value: priceNumber,
           formatted: `$${price}`,
-        },
-        marketCap: {
-          value: marketCap,
-          formatted: `$${marketCap.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
         },
         supplyPercentage: {
           value: (networkStats.supply / maxSupply) * 100,

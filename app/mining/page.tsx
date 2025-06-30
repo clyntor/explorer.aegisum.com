@@ -92,7 +92,7 @@ export default async function MiningPage() {
               </div>
             </div>
             <div className="space-y-1">
-              <h3 className="text-2xl font-bold">{miningStats.networkhashps?.toFixed(4) || "0.0000"} GH/s</h3>
+              <h3 className="text-2xl font-bold">{Number(miningStats.networkhashps?.toFixed(4)) || "0.0000"} GH/s</h3>
               <p className="text-xs text-muted-foreground">Estimated network hashrate</p>
             </div>
           </CardContent>
@@ -133,7 +133,7 @@ export default async function MiningPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-1">Difficulty</h3>
-              <p className="text-xl font-semibold">{miningStats.difficulty?.toFixed(4) || "0.0000"}</p>
+              <p className="text-xl font-semibold">{Number(miningStats.difficulty)?.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 }) || "0.0000"}</p>
             </div>
             <div>
               <h3 className="text-sm font-medium text-muted-foreground mb-1">Algorithm</h3>

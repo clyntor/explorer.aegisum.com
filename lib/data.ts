@@ -9,7 +9,7 @@ const RPC_PASS = process.env.RPC_PASS || "rpcpassword"
 const RPC_URL = `http://${RPC_USER}:${RPC_PASS}@${RPC_HOST}:${RPC_PORT}`
 
 // Helper function to make RPC calls
-async function rpcCall(method, params = []) {
+export async function rpcCall(method, params = []) {
   try {
     const response = await axios.post(RPC_URL, {
       jsonrpc: "1.0",
