@@ -52,7 +52,7 @@ export async function GET(request: NextRequest) {
         },
         networkHashRate: {
           value: networkHashRate,
-          formatted: `${Number(networkHashRate / 1000000000)} GH/s`
+          formatted: `${Number(networkHashRate / 1000000000).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 })} GH/s`
         },
         peers: {
           value: networkStats.connections,
@@ -84,9 +84,12 @@ export async function GET(request: NextRequest) {
         error: "Failed to fetch summary data",
         blockHeight: { value: 0, formatted: "0" },
         currentSupply: { value: 0, formatted: "0" },
-        maxSupply: { value: 100000000, formatted: "100,000,000" },
-        price: { value: 0, formatted: "$0.00000000" },
+        difficulty: { value: 0.0000, formatted: "0.0000" },
         marketCap: { value: 0, formatted: "$0.00" },
+        maxSupply: { value: 100000000, formatted: "100,000,000" },
+        networkHashRate: { value: 0.0000, formatted: "0.0000 GH/s" },
+        peers: { value: 0, formatted: "0" },
+        price: { value: 0, formatted: "$0.00000000" },
         supplyPercentage: { value: 0, formatted: "0.00%" },
         timestamp: new Date().toISOString(),
         network: "Aegisum",
