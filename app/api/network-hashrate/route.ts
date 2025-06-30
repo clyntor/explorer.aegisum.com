@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const networkStats = await getNetworkStats()
 
-    return new NextResponse(`${networkStats.nethash.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 })} GH/s`, {
+    return new NextResponse(`${Number(networkStats.nethash)} GH/s`, {
       status: 200,
       headers: {
         "Content-Type": "text/plain",
