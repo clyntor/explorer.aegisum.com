@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
 
     const networkStats = await getNetworkStats()
 
-    return new NextResponse(`${networkStats.difficulty_pow.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 4 })}`, {
+    return new NextResponse(Number(networkStats.difficulty_pow), {
       status: 200,
       headers: {
         "Content-Type": "text/plain",
